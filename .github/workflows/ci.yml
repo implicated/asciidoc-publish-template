@@ -1,0 +1,34 @@
+name: Publish GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: asciidoctor -D docs --backend=html5 -o index.html -a toc2 docs/index.adoc
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Ruby
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+          bundler-cache: true
+
+      - name: Install Asciidoctor
+        run: gem install asciidoctor
+
+      - name: Print version
+        run: echo $(asciidoctor --version)
+
+      - name: Generate Html
+        run: asciidoctor -D html --backend=html5 -o index.html docs/index.adoc
+
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          publish_dir: html
