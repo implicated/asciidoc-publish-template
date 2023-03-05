@@ -1,4 +1,0 @@
-= Title
-:toc: left
-:toclevels: 1
-:doctype: book

@@ -1,34 +1,23 @@
-name: Publish GitHub Pages
-
+name: Publish to GitHub Pages with Antora
 on:
   push:
-    branches:
-      - master
+    branches: [master]
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: asciidoctor -D docs --backend=html5 -o index.html -a toc2 docs/index.adoc
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Install Ruby
-      - uses: ruby/setup-ruby@v1
+      - name: Install Node.js
+        uses: actions/setup-node@v2
         with:
-          ruby-version: '3.0'
-          bundler-cache: true
-
-      - name: Install Asciidoctor
-        run: gem install asciidoctor
-
-      - name: Print version
-        run: echo $(asciidoctor --version)
-
-      - name: Generate Html
-        run: asciidoctor -D html --backend=html5 -o index.html docs/index.adoc
-
+          node-version: '16'
+      - name: Install Antora and the Antora Lunr Extension
+        run: npm i antora @antora/lunr-extension
+      - name: Generate Site
+        run: npx antora antora-playbook.yml
       - name: Publish to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
-          publish_dir: html
+          publish_dir: build/site
