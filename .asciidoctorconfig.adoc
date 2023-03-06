@@ -1,5 +1,4 @@
 :experimental:
 :sectlinks:
 :sectanchors:
-:sectnums:
 :linkcss:
